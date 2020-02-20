@@ -76,7 +76,6 @@
 
 (defn- editable? [coll]
   #?(:clj  (instance? clojure.lang.IEditableCollection coll)
-     :bb (instance? clojure.lang.IEditableCollection coll)
      :cljs (satisfies? cljs.core.IEditableCollection coll)))
 
 (defn- reduce-map [f coll]
@@ -89,7 +88,6 @@
   "Create a map entry for a key and value pair."
   [k v]
   #?(:clj  (clojure.lang.MapEntry. k v)
-     :bb  (clojure.lang.MapEntry. k v)
      :cljs (cljs.core.MapEntry. k v nil)))
 
 (defn map-kv
@@ -173,7 +171,6 @@
 (defn queue
   "Creates an empty persistent queue, or one populated with a collection."
   ([] #?(:clj  clojure.lang.PersistentQueue/EMPTY
-         :bb  clojure.lang.PersistentQueue/EMPTY
          :cljs cljs.core.PersistentQueue.EMPTY))
   ([coll] (into (queue) coll)))
 
@@ -181,14 +178,12 @@
   "Returns true if x implements clojure.lang.PersistentQueue."
   [x]
   (instance? #?(:clj  clojure.lang.PersistentQueue
-                :bb clojure.lang.PersistentQueue
                 :cljs cljs.core.PersistentQueue) x))
 
 (defn boolean?
   "Returns true if x is a boolean."
   [x]
   #?(:clj  (instance? Boolean x)
-     :bb (clojure.core/boolean? x)
      :cljs (or (true? x) (false? x))))
 
 (defn least
@@ -454,11 +449,6 @@
                 (if (compare-and-set! atom value (f value))
                   value
                   (recur))))
-      :bb  (loop []
-              (let [value @atom]
-                (if (compare-and-set! atom value (f value))
-                  value
-                  (recur))))
       :cljs (let [value @atom]
               (reset! atom (f value))
               value)))
@@ -477,7 +467,6 @@
   Clojure as well as ClojureScript."
   [ex]
   #?(:clj (when (instance? Throwable ex) (.getMessage ^Throwable ex))
-     :bb  (clojure.core/ex-message ex)
      :cljs (cljs.core/ex-message ex)))
 
 (defn ex-cause
@@ -486,7 +475,6 @@
   Clojure as well as ClojureScript."
   [ex]
   #?(:clj  (when (instance? Throwable ex) (.getCause ^Throwable ex))
-     :bb  (clojure.core/ex-cause ex)
      :cljs (cljs.core/ex-cause ex)))
 
 (defn uuid?
@@ -499,7 +487,6 @@
   in ClojureScript, while in Clojure it returns a `java.util.UUID` object."
   [s]
   #?(:clj  (java.util.UUID/fromString s)
-     :bb (java.util.UUID/fromString s)
      :cljs (cljs.core/uuid s)))
 
 (defn random-uuid
@@ -507,5 +494,4 @@
   for Clojure as well as ClojureScript."
   []
   #?(:clj  (java.util.UUID/randomUUID)
-     :bb  (java.util.UUID/randomUUID)
      :cljs (cljs.core/random-uuid)))
