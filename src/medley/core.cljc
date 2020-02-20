@@ -466,7 +466,7 @@
   other types returns nil. Same as `cljs.core/ex-message` except it works for
   Clojure as well as ClojureScript."
   [ex]
-  #?(:clj (when (instance? Throwable ex) (.getMessage ^Throwable ex))
+  #?(:clj  (when (instance? Throwable ex) (.getMessage ^Throwable ex))
      :cljs (cljs.core/ex-message ex)))
 
 (defn ex-cause
@@ -480,7 +480,7 @@
 (defn uuid?
   "Returns true if the value is a UUID."
   [x]
-  (instance? #?(:clj java.util.UUID :bb java.util.UUID :cljs cljs.core.UUID) x))
+  (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
 
 (defn uuid
   "Returns a UUID generated from the supplied string. Same as `cljs.core/uuid`
